@@ -2,6 +2,8 @@ import React, { useContext } from 'react';
 import img from '../../assets/images/login/login.svg'
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../provider/AuthProvider';
+import SharedSocail from '../Shared/SharedSocail/google'
+
 
 const Signup = () => {
     const {createUser}=useContext(AuthContext)
@@ -63,7 +65,7 @@ const Signup = () => {
                     <p className='text-center'>Already have an account?
                         <Link to='/login' className=' text-orange-500'> Login</Link>
                     </p>
-
+                    <SharedSocail></SharedSocail>
                 </div>
             </div>
         </div>

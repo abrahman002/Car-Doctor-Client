@@ -7,7 +7,7 @@ const CheckOut = () => {
     const service = useLoaderData();
     const {user}=useContext(AuthContext)
 
-    const { _id, price, title } = service;
+    const { _id, price, title,img } = service;
     
     const handleOrder=event=>{
         event.preventDefault();
@@ -19,7 +19,9 @@ const CheckOut = () => {
         const  order={
             CustomarName:name,email,date,
             service:_id,
-            pirce:price
+            pirce:price,
+            img:img,
+            serviceName:title
         }
 
         console.log(order)

@@ -1,11 +1,16 @@
 import React, { useContext } from 'react';
 import img from '../../assets/images/login/login.svg'
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../provider/AuthProvider';
+import SharedSocail from '../Shared/SharedSocail/google'
 
 const Login = () => {
 
-    const {login}=useContext(AuthContext)
+    const {login}=useContext(AuthContext);
+    const location=useLocation();
+    const Navigate=useNavigate()
+
+    const from=location.state?.from?.pathname || '/' ;
 
     const handleSubmit=event=>{
         event.preventDefault()
@@ -19,7 +24,10 @@ const Login = () => {
         login(email,password)
         .then(result=>{
             const user=result.user;
-             console.log(user)
+          
+             console.log(user);
+
+             Navigate(from ,{replace:true})
         })
         .catch(error=>console.log(error))
     }
@@ -59,7 +67,7 @@ const Login = () => {
                     <p className='text-center'>New to Car-Doctor?
                         <Link to='/signup' className=' text-orange-500'> Sign Up</Link>
                     </p>
-
+                <SharedSocail></SharedSocail>    
                 </div>
             </div>
         </div>

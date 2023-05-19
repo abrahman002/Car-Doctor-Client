@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import app from '../firebase/firebase.config';
 
 export const  AuthContext = createContext()
@@ -9,6 +9,8 @@ const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    const googleProvider=new GoogleAuthProvider()
 
     const createUser=(email,password)=>{
         setLoading(true)
@@ -20,6 +22,12 @@ const AuthProvider = ({ children }) => {
         return signInWithEmailAndPassword(auth,email,password);
     }
 
+
+    const googleSignIn=()=>{
+        setLoading(true)
+        return signInWithPopup(auth,googleProvider);
+    }
+
     const logOut=()=>{
         return signOut(auth);
     }
@@ -29,7 +37,28 @@ const AuthProvider = ({ children }) => {
     useEffect(()=>{
         const unSubscriber =onAuthStateChanged(auth,currentUser=>{
             setUser(currentUser);
-            setLoading(false)
+            setLoading(false);
+
+           if(currentUser && currentUser.email){
+            const loggedUSer={
+                email:currentUser.email
+            }
+            fetch('http://localhost:500/jwt',{
+                method:"POST",
+                headers:{
+                    'content-type':'application/json'
+                },
+                body:JSON.stringify(loggedUSer)
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                localStorage.setItem('car-token',data.token)
+            })
+           }
+           else{
+            localStorage.removeItem('car-token')
+           }
         })
 
         return ()=>{
@@ -42,6 +71,7 @@ const AuthProvider = ({ children }) => {
         loading,
         createUser,
         login,
+        googleSignIn,
         logOut
     }
     return (
